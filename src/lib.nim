@@ -1,5 +1,4 @@
 import std/os
-import std/private/ospaths2
 
 const FFMPEG_PATH = "/usr/bin/ffmpeg"
 const CONVERTED_OUT_DIR = "converted-audio-files"
