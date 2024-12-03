@@ -1,4 +1,4 @@
-import std/private/ospaths2
+import std/os
 
 import unittest2
 
