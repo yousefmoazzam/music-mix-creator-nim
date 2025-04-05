@@ -56,3 +56,9 @@ func generateConcatArgsFinalPart*(noOfFiles: int): string =
   let noOfSilences = noOfFiles - 1
   let noOfAudioPieces = noOfFiles + noOfSilences
   return fmt("concat=n={noOfAudioPieces}:v=0:a=1")
+
+func generateConcatArgs*(noOfFiles: int): string =
+  let trimsPart = generateConcateArgsTrims(noOfFiles)
+  let orderingPart = generateConcatArgsFileOrdering(noOfFiles)
+  let concatPart = generateConcatArgsFinalPart(noOfFiles)
+  return join([trimsPart, orderingPart, concatPart])

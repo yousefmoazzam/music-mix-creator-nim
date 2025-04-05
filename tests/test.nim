@@ -1,11 +1,12 @@
 import std/os
+from std/strutils import join
 
 import unittest2
 
 from ../src/lib import
   generateSongConversionCommand, generateInputFilesFlags,
   generateConvertedOutputFilepaths, generateConcatArgsFileOrdering,
-  generateConcateArgsTrims, generateConcatArgsFinalPart
+  generateConcateArgsTrims, generateConcatArgsFinalPart, generateConcatArgs
 
 suite "test suite":
   test "test generateSongConversionCommand":
@@ -74,3 +75,16 @@ suite "test suite":
     let expectedOutput = "concat=n=5:v=0:a=1"
     let output = generateConcatArgsFinalPart(noOfSongFiles)
     doAssert output == expectedOutput
+
+  test "test generateConcatArgs":
+    let noOfSongFiles = 4
+    let expectedTrimsValues =
+      ["[4]atrim=duration=1[g0]", "[4]atrim=duration=1[g1]", "[4]atrim=duration=1[g2]"]
+    var expectedTrimsPart = join(expectedTrimsValues, ";")
+    expectedTrimsPart.add(";")
+    let expectedOrderingPart = "[0][g0][1][g1][2][g2][3]"
+    let expectedConcatPart = "concat=n=7:v=0:a=1"
+    let expectedConcatArgs =
+      join([expectedTrimsPart, expectedOrderingPart, expectedConcatPart])
+    let concatArgs = generateConcatArgs(noOfSongFiles)
+    doAssert concatArgs == expectedConcatArgs
