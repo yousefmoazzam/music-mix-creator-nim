@@ -19,8 +19,9 @@ suite "test suite":
     var expectedArgs = @["-i", "-vn", "-ar", "44100", "-ac", "2", "-b:a", "192k"]
     expectedArgs.add(convertedOutFilePath)
     let (program, args) = generateSongConversionCommand(songPath, outputDirPath)
-    doAssert program == expectedProgram
-    doAssert args == expectedArgs
+    check:
+      program == expectedProgram
+      args == expectedArgs
 
   test "test generateInputFilesFlags":
     let songPaths = [
@@ -40,7 +41,7 @@ suite "test suite":
       "-i",
       "anullsrc",
     ]
-    doAssert expectedFlagsAndPaths == flagsAndPaths[0 .. flagsAndPaths.len() - 1]
+    check(expectedFlagsAndPaths == flagsAndPaths[0 .. flagsAndPaths.len() - 1])
 
   test "test generateConvertedOutputFilepaths":
     let inputSongPaths = [
@@ -55,26 +56,29 @@ suite "test suite":
     let convertedSongPaths = generateConvertedOutputFilepaths(
       inputSongPaths[0 .. inputSongPaths.len() - 1], outDirPath
     )
-    doAssert expectedConvertedSongPaths ==
-      convertedSongPaths[0 .. convertedSongPaths.len() - 1]
+    check(
+      expectedConvertedSongPaths == convertedSongPaths[
+        0 .. convertedSongPaths.len() - 1
+      ]
+    )
 
   test "test generateConcatArgsFileOrdering":
     let noOfSongFiles = 2
     let expectedOutput = "[0][g0][1]"
     let output = generateConcatArgsFileOrdering(noOfSongFiles)
-    doAssert output == expectedOutput
+    check(output == expectedOutput)
 
   test "test generateConcatArgsTrims":
     let noOfSongFiles = 3
     let expectedOutput = "[3]atrim=duration=1[g0];[3]atrim=duration=1[g1];"
     let output = generateConcateArgsTrims(noOfSongFiles)
-    doAssert output == expectedOutput
+    check(output == expectedOutput)
 
   test "test generateConcatArgsFinalPart":
     let noOfSongFiles = 3
     let expectedOutput = "concat=n=5:v=0:a=1"
     let output = generateConcatArgsFinalPart(noOfSongFiles)
-    doAssert output == expectedOutput
+    check(output == expectedOutput)
 
   test "test generateConcatArgs":
     let noOfSongFiles = 4
@@ -87,4 +91,4 @@ suite "test suite":
     let expectedConcatArgs =
       join([expectedTrimsPart, expectedOrderingPart, expectedConcatPart])
     let concatArgs = generateConcatArgs(noOfSongFiles)
-    doAssert concatArgs == expectedConcatArgs
+    check(concatArgs == expectedConcatArgs)
