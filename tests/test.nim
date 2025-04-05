@@ -2,7 +2,7 @@ import std/os
 
 import unittest2
 
-import ../src/lib
+from ../src/lib import generateSongConversionCommand, generateInputFilesFlags
 
 suite "test suite":
   test "test generateSongConversionCommand":
