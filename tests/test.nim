@@ -17,3 +17,23 @@ suite "test suite":
     let (program, args) = generateSongConversionCommand(songPath, outputDirPath)
     doAssert program == expectedProgram
     doAssert args == expectedArgs
+
+  test "test generateInputFilesFlags":
+    let songPaths = [
+      "/home/converted-audio-files/SongA.mp3", "/home/converted-audio-files/SongB.mp3",
+      "/home/converted-audio-files/SongC.mp3",
+    ]
+    let flagsAndPaths = generateInputFilesFlags(songPaths[0 .. songPaths.len() - 1])
+    let expectedFlagsAndPaths = [
+      "-i",
+      songPaths[0],
+      "-i",
+      songPaths[1],
+      "-i",
+      songPaths[2],
+      "-f",
+      "lavfi",
+      "-i",
+      "anullsrc",
+    ]
+    doAssert expectedFlagsAndPaths == flagsAndPaths[0 .. flagsAndPaths.len() - 1]
