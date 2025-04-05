@@ -51,3 +51,8 @@ func generateConcateArgsTrims*(noOfFiles: int): string =
   var res = join(vals, ";")
   res.add(";")
   return res
+
+func generateConcatArgsFinalPart*(noOfFiles: int): string =
+  let noOfSilences = noOfFiles - 1
+  let noOfAudioPieces = noOfFiles + noOfSilences
+  return fmt("concat=n={noOfAudioPieces}:v=0:a=1")
