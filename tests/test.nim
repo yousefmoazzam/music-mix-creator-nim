@@ -4,7 +4,7 @@ import unittest2
 
 from ../src/lib import
   generateSongConversionCommand, generateInputFilesFlags,
-  generateConvertedOutputFilepaths
+  generateConvertedOutputFilepaths, generateConcatArgsFileOrdering
 
 suite "test suite":
   test "test generateSongConversionCommand":
@@ -55,3 +55,9 @@ suite "test suite":
     )
     doAssert expectedConvertedSongPaths ==
       convertedSongPaths[0 .. convertedSongPaths.len() - 1]
+
+  test "test generateConcatArgsFileOrdering":
+    let noOfSongFiles = 2
+    let expectedOutput = "[0][g0][1]"
+    let output = generateConcatArgsFileOrdering(noOfSongFiles)
+    doAssert output == expectedOutput

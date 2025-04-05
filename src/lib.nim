@@ -1,4 +1,5 @@
 import std/os
+import std/strformat
 
 const FFMPEG_PATH = "/usr/bin/ffmpeg"
 const CONVERTED_OUT_DIR = "converted-audio-files"
@@ -31,3 +32,12 @@ func generateConvertedOutputFilepaths*(
     let fileName = extractFilename(path)
     convertedPaths.add(joinPath(outDirPath, fileName))
   return convertedPaths
+
+func generateConcatArgsFileOrdering*(noOfFiles: int): string =
+  var res = ""
+  for i in 0 .. noOfFiles - 2:
+    let songSilencePair = fmt("[{i}][g{i}]")
+    res.add(songSilencePair)
+  let finalSongNoSilence = fmt("[{noOfFiles - 1}]")
+  res.add(finalSongNoSilence)
+  return res
