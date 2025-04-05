@@ -1,5 +1,6 @@
 import std/os
 import std/strformat
+from std/strutils import join
 
 const FFMPEG_PATH = "/usr/bin/ffmpeg"
 const CONVERTED_OUT_DIR = "converted-audio-files"
@@ -40,4 +41,13 @@ func generateConcatArgsFileOrdering*(noOfFiles: int): string =
     res.add(songSilencePair)
   let finalSongNoSilence = fmt("[{noOfFiles - 1}]")
   res.add(finalSongNoSilence)
+  return res
+
+func generateConcateArgsTrims*(noOfFiles: int): string =
+  var vals: seq[string] = @[]
+  for i in 0 .. noOfFiles - 2:
+    let silenceTrim = fmt("[{noOfFiles}]atrim=duration=1[g{i}]")
+    vals.add(silenceTrim)
+  var res = join(vals, ";")
+  res.add(";")
   return res
