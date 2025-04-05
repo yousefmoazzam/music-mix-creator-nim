@@ -6,8 +6,7 @@ const INPUT_FLAG = "-i"
 const SONG_CONVERSION_FLAGS = ["-vn", "-ar", "44100", "-ac", "2", "-b:a", "192k"]
 
 func generateSongConversionCommand*(
-  songPath: string,
-  outPath: string
+    songPath: string, outPath: string
 ): (string, seq[string]) =
   let (_, fileName) = splitPath(songPath)
   let outputFilePath = joinPath(outPath, CONVERTED_OUT_DIR, fileName)
