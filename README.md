@@ -1,0 +1,5 @@
+# Run tests
+
+```
+nimble test
+```
