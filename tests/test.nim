@@ -2,7 +2,9 @@ import std/os
 
 import unittest2
 
-from ../src/lib import generateSongConversionCommand, generateInputFilesFlags
+from ../src/lib import
+  generateSongConversionCommand, generateInputFilesFlags,
+  generateConvertedOutputFilepaths
 
 suite "test suite":
   test "test generateSongConversionCommand":
@@ -37,3 +39,19 @@ suite "test suite":
       "anullsrc",
     ]
     doAssert expectedFlagsAndPaths == flagsAndPaths[0 .. flagsAndPaths.len() - 1]
+
+  test "test generateConvertedOutputFilepaths":
+    let inputSongPaths = [
+      "/home/test-mix/SongA.mp3", "/home/test-mix/SongB.mp3", "/home/test-mix/SongC.mp3"
+    ]
+    let outDirPath = "/home/mix-out"
+    let expectedConvertedSongPaths = [
+      joinPath(outDirPath, extractFilename(inputSongPaths[0])),
+      joinPath(outDirPath, extractFilename(inputSongPaths[1])),
+      joinPath(outDirPath, extractFilename(inputSongPaths[2])),
+    ]
+    let convertedSongPaths = generateConvertedOutputFilepaths(
+      inputSongPaths[0 .. inputSongPaths.len() - 1], outDirPath
+    )
+    doAssert expectedConvertedSongPaths ==
+      convertedSongPaths[0 .. convertedSongPaths.len() - 1]

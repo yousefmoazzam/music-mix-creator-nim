@@ -22,3 +22,12 @@ func generateInputFilesFlags*(paths: seq[string]): seq[string] =
   for arg in SILENCE_INPUT:
     args.add(arg)
   return args
+
+func generateConvertedOutputFilepaths*(
+    paths: seq[string], outDirPath: string
+): seq[string] =
+  var convertedPaths: seq[string] = @[]
+  for path in paths:
+    let fileName = extractFilename(path)
+    convertedPaths.add(joinPath(outDirPath, fileName))
+  return convertedPaths
