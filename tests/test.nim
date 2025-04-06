@@ -28,7 +28,7 @@ suite "test suite":
       "/home/converted-audio-files/SongA.mp3", "/home/converted-audio-files/SongB.mp3",
       "/home/converted-audio-files/SongC.mp3",
     ]
-    let flagsAndPaths = generateInputFilesFlags(songPaths[0 .. songPaths.len() - 1])
+    let flagsAndPaths = generateInputFilesFlags(songPaths[0 ..< songPaths.len()])
     let expectedFlagsAndPaths = [
       "-i",
       songPaths[0],
@@ -41,7 +41,7 @@ suite "test suite":
       "-i",
       "anullsrc",
     ]
-    check(expectedFlagsAndPaths == flagsAndPaths[0 .. flagsAndPaths.len() - 1])
+    check(expectedFlagsAndPaths == flagsAndPaths[0 ..< flagsAndPaths.len()])
 
   test "test generateConvertedOutputFilepaths":
     let inputSongPaths = [
@@ -54,12 +54,10 @@ suite "test suite":
       joinPath(outDirPath, extractFilename(inputSongPaths[2])),
     ]
     let convertedSongPaths = generateConvertedOutputFilepaths(
-      inputSongPaths[0 .. inputSongPaths.len() - 1], outDirPath
+      inputSongPaths[0 ..< inputSongPaths.len()], outDirPath
     )
     check(
-      expectedConvertedSongPaths == convertedSongPaths[
-        0 .. convertedSongPaths.len() - 1
-      ]
+      expectedConvertedSongPaths == convertedSongPaths[0 ..< convertedSongPaths.len()]
     )
 
   test "test generateConcatArgsFileOrdering":
