@@ -14,7 +14,7 @@ func generateSongConversionCommand*(
   let (_, fileName) = splitPath(songPath)
   let outputFilePath = joinPath(outPath, CONVERTED_OUT_DIR, fileName)
   var args = @[INPUT_FLAG] & @SONG_CONVERSION_FLAGS & @[outputFilePath]
-  return (FFMPEG_PATH, args)
+  (FFMPEG_PATH, args)
 
 func generateInputFilesFlags*(paths: seq[string]): seq[string] =
   var args: seq[string] = @[]
@@ -23,7 +23,7 @@ func generateInputFilesFlags*(paths: seq[string]): seq[string] =
     args.add(song)
   for arg in SILENCE_INPUT:
     args.add(arg)
-  return args
+  args
 
 func generateConvertedOutputFilepaths*(
     paths: seq[string], outDirPath: string
@@ -32,7 +32,7 @@ func generateConvertedOutputFilepaths*(
   for path in paths:
     let fileName = extractFilename(path)
     convertedPaths.add(joinPath(outDirPath, fileName))
-  return convertedPaths
+  convertedPaths
 
 func generateConcatArgsFileOrdering*(noOfFiles: int): string =
   var res = ""
@@ -41,7 +41,7 @@ func generateConcatArgsFileOrdering*(noOfFiles: int): string =
     res.add(songSilencePair)
   let finalSongNoSilence = fmt("[{noOfFiles - 1}]")
   res.add(finalSongNoSilence)
-  return res
+  res
 
 func generateConcateArgsTrims*(noOfFiles: int): string =
   var vals: seq[string] = @[]
@@ -50,15 +50,15 @@ func generateConcateArgsTrims*(noOfFiles: int): string =
     vals.add(silenceTrim)
   var res = join(vals, ";")
   res.add(";")
-  return res
+  res
 
 func generateConcatArgsFinalPart*(noOfFiles: int): string =
   let noOfSilences = noOfFiles - 1
   let noOfAudioPieces = noOfFiles + noOfSilences
-  return fmt("concat=n={noOfAudioPieces}:v=0:a=1")
+  fmt("concat=n={noOfAudioPieces}:v=0:a=1")
 
 func generateConcatArgs*(noOfFiles: int): string =
   let trimsPart = generateConcateArgsTrims(noOfFiles)
   let orderingPart = generateConcatArgsFileOrdering(noOfFiles)
   let concatPart = generateConcatArgsFinalPart(noOfFiles)
-  return join([trimsPart, orderingPart, concatPart])
+  join([trimsPart, orderingPart, concatPart])
