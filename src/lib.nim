@@ -1,5 +1,5 @@
-import std/os
-import std/strformat
+from std/os import joinPath, splitPath, extractFilename
+from std/strformat import fmt
 from std/strutils import join
 
 const FFMPEG_PATH = "/usr/bin/ffmpeg"

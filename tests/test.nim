@@ -1,7 +1,7 @@
-import std/os
+from std/os import joinPath, extractFilename
 from std/strutils import join
 
-import unittest2
+from unittest2 import suite, test, check
 
 from ../src/lib import
   generateSongConversionCommand, generateInputFilesFlags,
