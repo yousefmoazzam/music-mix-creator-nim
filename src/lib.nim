@@ -3,6 +3,7 @@ from std/strformat import fmt
 from std/strutils import join
 
 const FFMPEG_PATH = "/usr/bin/ffmpeg"
+const FFPROBE_PATH = "/usr/bin/ffprobe"
 const CONVERTED_OUT_DIR = "converted-audio-files"
 const INPUT_FLAG = "-i"
 const SONG_CONVERSION_FLAGS = ["-vn", "-ar", "44100", "-ac", "2", "-b:a", "192k"]
@@ -62,3 +63,8 @@ func generateConcatArgs*(noOfFiles: int): string =
   let orderingPart = generateConcatArgsFileOrdering(noOfFiles)
   let concatPart = generateConcatArgsFinalPart(noOfFiles)
   join([trimsPart, orderingPart, concatPart])
+
+func generateFfprobeCommand*(mixFilePath: string): (string, array[7, string]) =
+  let args =
+    ["-show_entries", "format=duration", "-v", "quiet", "-of", "csv", mixFilePath]
+  (FFPROBE_PATH, args)

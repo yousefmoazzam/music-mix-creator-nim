@@ -6,7 +6,8 @@ from unittest2 import suite, test, check
 from ../src/lib import
   generateSongConversionCommand, generateInputFilesFlags,
   generateConvertedOutputFilepaths, generateConcatArgsFileOrdering,
-  generateConcateArgsTrims, generateConcatArgsFinalPart, generateConcatArgs
+  generateConcateArgsTrims, generateConcatArgsFinalPart, generateConcatArgs,
+  generateFfprobeCommand
 
 suite "test suite":
   test "test generateSongConversionCommand":
@@ -90,3 +91,14 @@ suite "test suite":
       join([expectedTrimsPart, expectedOrderingPart, expectedConcatPart])
     let concatArgs = generateConcatArgs(noOfSongFiles)
     check(concatArgs == expectedConcatArgs)
+
+  test "test generateFfprobeCommand":
+    let mixAudioFilePath = "/home/test-mix/mix.mp3"
+    let expectedProgram = "/usr/bin/ffprobe"
+    let expectedArgs = [
+      "-show_entries", "format=duration", "-v", "quiet", "-of", "csv", mixAudioFilePath
+    ]
+    let (program, args) = generateFfprobeCommand(mixAudioFilePath)
+    check:
+      program == expectedProgram
+      args == expectedArgs
