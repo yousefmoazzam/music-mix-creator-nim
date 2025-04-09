@@ -1,6 +1,6 @@
 from std/os import joinPath, splitPath, extractFilename
 from std/strformat import fmt
-from std/strutils import join
+from std/strutils import join, parseFloat, split
 
 const FFMPEG_PATH = "/usr/bin/ffmpeg"
 const FFPROBE_PATH = "/usr/bin/ffprobe"
@@ -68,3 +68,7 @@ func generateFfprobeCommand*(mixFilePath: string): (string, array[7, string]) =
   let args =
     ["-show_entries", "format=duration", "-v", "quiet", "-of", "csv", mixFilePath]
   (FFPROBE_PATH, args)
+
+func parseFfprobeOutput*(s: string): float64 =
+  let vals = s.split(',')
+  parseFloat(vals[1])

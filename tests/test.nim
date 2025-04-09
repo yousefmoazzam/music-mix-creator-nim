@@ -1,5 +1,7 @@
 from std/os import joinPath, extractFilename
+from std/strformat import fmt
 from std/strutils import join
+from system import abs
 
 from unittest2 import suite, test, check
 
@@ -7,7 +9,7 @@ from ../src/lib import
   generateSongConversionCommand, generateInputFilesFlags,
   generateConvertedOutputFilepaths, generateConcatArgsFileOrdering,
   generateConcateArgsTrims, generateConcatArgsFinalPart, generateConcatArgs,
-  generateFfprobeCommand
+  generateFfprobeCommand, parseFfprobeOutput
 
 suite "test suite":
   test "test generateSongConversionCommand":
@@ -102,3 +104,11 @@ suite "test suite":
     check:
       program == expectedProgram
       args == expectedArgs
+
+  test "test parseFfprobeOutput":
+    let exactExpected = 227.552653
+    let ffprobeOutput = fmt("format,{exactExpected}")
+    let tolerance = 0.000001
+    let parsedOutput = parseFfprobeOutput(ffprobeOutput)
+    let isWithinTolerance = abs(parsedOutput - exactExpected) < tolerance
+    check(isWithinTolerance)
