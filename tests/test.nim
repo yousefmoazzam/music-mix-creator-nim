@@ -9,7 +9,7 @@ from ../src/lib import
   generateSongConversionCommand, generateInputFilesFlags,
   generateConvertedOutputFilepaths, generateConcatArgsFileOrdering,
   generateConcateArgsTrims, generateConcatArgsFinalPart, generateConcatArgs,
-  generateFfprobeCommand, parseFfprobeOutput
+  generateFfprobeCommand, parseFfprobeOutput, FFMPEG_PATH, generateAudioVideoMuxCommand
 
 suite "test suite":
   test "test generateSongConversionCommand":
@@ -112,3 +112,36 @@ suite "test suite":
     let parsedOutput = parseFfprobeOutput(ffprobeOutput)
     let isWithinTolerance = abs(parsedOutput - exactExpected) < tolerance
     check(isWithinTolerance)
+
+  test "test generateAudioVideoMuxCommand":
+    let audioMixPath = "/home/mix/audio-mix.mp3"
+    let imagePath = "/home/mix/image.jpg"
+    let mixDuration = 100.012345
+    let outputPath = "/home/mix/mix.mp4"
+    let expectedArgs = [
+      "-loop",
+      "1",
+      "-framerate",
+      "24",
+      "-i",
+      imagePath,
+      "-i",
+      audioMixPath,
+      "-vf",
+      "fade=t=in:st=0:d=10,",
+      fmt("fade=t=out:st={mixDuration - 10}:d=10"),
+      "-max_muxing_queue_size",
+      "1024",
+      "-c:v",
+      "libx264",
+      "-tune",
+      "stillimage",
+      "-t",
+      fmt("{mixDuration}"),
+      outputPath,
+    ]
+    let (program, args) =
+      generateAudioVideoMuxCommand(imagePath, audioMixPath, mixDuration, outputPath)
+    check:
+      program == FFMPEG_PATH
+      args == expectedArgs

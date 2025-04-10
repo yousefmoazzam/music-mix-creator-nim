@@ -9,6 +9,8 @@ const INPUT_FLAG = "-i"
 const SONG_CONVERSION_FLAGS = ["-vn", "-ar", "44100", "-ac", "2", "-b:a", "192k"]
 const SILENCE_INPUT = ["-f", "lavfi", "-i", "anullsrc"]
 
+export FFMPEG_PATH
+
 func generateSongConversionCommand*(
     songPath: string, outPath: string
 ): (string, seq[string]) =
@@ -72,3 +74,30 @@ func generateFfprobeCommand*(mixFilePath: string): (string, array[7, string]) =
 func parseFfprobeOutput*(s: string): float64 =
   let vals = s.split(',')
   parseFloat(vals[1])
+
+func generateAudioVideoMuxCommand*(
+    imagePath: string, audioPath: string, duration: float64, outPath: string
+): (string, array[20, string]) =
+  let args = [
+    "-loop",
+    "1",
+    "-framerate",
+    "24",
+    "-i",
+    imagePath,
+    "-i",
+    audioPath,
+    "-vf",
+    "fade=t=in:st=0:d=10,",
+    fmt("fade=t=out:st={duration - 10}:d=10"),
+    "-max_muxing_queue_size",
+    "1024",
+    "-c:v",
+    "libx264",
+    "-tune",
+    "stillimage",
+    "-t",
+    fmt("{duration}"),
+    outPath,
+  ]
+  (FFMPEG_PATH, args)
