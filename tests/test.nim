@@ -3,13 +3,14 @@ from std/strformat import fmt
 from std/strutils import join
 from system import abs
 
-from unittest2 import suite, test, check
+from unittest2 import suite, test, check, fail
 
 from ../src/lib import
   generateSongConversionCommand, generateInputFilesFlags,
   generateConvertedOutputFilepaths, generateConcatArgsFileOrdering,
   generateConcateArgsTrims, generateConcatArgsFinalPart, generateConcatArgs,
-  generateFfprobeCommand, parseFfprobeOutput, FFMPEG_PATH, generateAudioVideoMuxCommand
+  generateFfprobeCommand, parseFfprobeOutput, FFMPEG_PATH, generateAudioVideoMuxCommand,
+  EmptyDuration
 
 suite "test suite":
   test "test generateSongConversionCommand":
@@ -112,6 +113,14 @@ suite "test suite":
     let parsedOutput = parseFfprobeOutput(ffprobeOutput)
     let isWithinTolerance = abs(parsedOutput - exactExpected) < tolerance
     check(isWithinTolerance)
+
+  test "parseFfprobeOuput raises exception if empty duration":
+    let ffprobeOutput = "format,"
+    try:
+      let _ = parseFfprobeOutput(ffprobeOutput)
+      fail()
+    except EmptyDuration as e:
+      check(e.msg == "")
 
   test "test generateAudioVideoMuxCommand":
     let audioMixPath = "/home/mix/audio-mix.mp3"

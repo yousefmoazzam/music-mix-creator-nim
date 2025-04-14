@@ -9,7 +9,9 @@ const INPUT_FLAG = "-i"
 const SONG_CONVERSION_FLAGS = ["-vn", "-ar", "44100", "-ac", "2", "-b:a", "192k"]
 const SILENCE_INPUT = ["-f", "lavfi", "-i", "anullsrc"]
 
-export FFMPEG_PATH
+type EmptyDuration = object of CatchableError
+
+export FFMPEG_PATH, EmptyDuration
 
 func generateSongConversionCommand*(
     songPath: string, outPath: string
@@ -71,8 +73,10 @@ func generateFfprobeCommand*(mixFilePath: string): (string, array[7, string]) =
     ["-show_entries", "format=duration", "-v", "quiet", "-of", "csv", mixFilePath]
   (FFPROBE_PATH, args)
 
-func parseFfprobeOutput*(s: string): float64 =
+func parseFfprobeOutput*(s: string): float64 {.raises: [ValueError, EmptyDuration].} =
   let vals = s.split(',')
+  if vals.len() == 2 and vals[1] == "":
+    raise newException(EmptyDuration, "")
   parseFloat(vals[1])
 
 func generateAudioVideoMuxCommand*(
