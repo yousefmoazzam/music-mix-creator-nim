@@ -77,7 +77,10 @@ func parseFfprobeOutput*(s: string): float64 {.raises: [ValueError, EmptyDuratio
   let vals = s.split(',')
   if vals.len() == 2 and vals[1] == "":
     raise newException(EmptyDuration, "")
-  parseFloat(vals[1])
+  try:
+    parseFloat(vals[1])
+  except ValueError:
+    raise newException(ValueError, fmt("Expected float, got {vals[1]}"))
 
 func generateAudioVideoMuxCommand*(
     imagePath: string, audioPath: string, duration: float64, outPath: string

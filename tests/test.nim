@@ -122,6 +122,15 @@ suite "test suite":
     except EmptyDuration as e:
       check(e.msg == "")
 
+  test "parseFfprobeOutput raises exception if duration parsing fails":
+    let incorrectValue = "NotAFloat"
+    let ffprobeOutput = fmt("format,{incorrectValue}")
+    try:
+      let _ = parseFfprobeOutput(ffprobeOutput)
+      fail()
+    except ValueError as e:
+      check(e.msg == fmt("Expected float, got {incorrectValue}"))
+
   test "test generateAudioVideoMuxCommand":
     let audioMixPath = "/home/mix/audio-mix.mp3"
     let imagePath = "/home/mix/image.jpg"
